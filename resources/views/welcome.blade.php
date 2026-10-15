@@ -557,6 +557,51 @@
             color: rgba(255,255,255,0.82);
         }
 
+        .history-panel {
+            margin-top: 26px;
+        }
+
+        .history-list {
+            display: grid;
+            gap: 12px;
+            padding: 0 24px 24px;
+        }
+
+        .history-item {
+            display: grid;
+            grid-template-columns: minmax(140px, 0.8fr) minmax(220px, 1.5fr) minmax(160px, 1fr) auto;
+            gap: 16px;
+            align-items: center;
+            padding: 16px 18px;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.75);
+        }
+
+        .history-item strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .history-item span,
+        .history-item time {
+            color: var(--muted);
+            font-size: 0.86rem;
+            line-height: 1.5;
+        }
+
+        .history-note {
+            overflow-wrap: anywhere;
+        }
+
+        .history-empty {
+            padding: 28px 20px;
+            border: 1px dashed rgba(148, 163, 184, 0.45);
+            border-radius: 16px;
+            color: var(--muted);
+            text-align: center;
+        }
+
         @media (max-width: 900px) {
             .hero,
             .content-grid {
@@ -570,6 +615,10 @@
             .menu-grid,
             .team-list {
                 grid-template-columns: 1fr;
+            }
+
+            .history-item {
+                grid-template-columns: 1fr 1fr;
             }
         }
 
@@ -593,6 +642,11 @@
 
             .stats {
                 grid-template-columns: 1fr;
+            }
+
+            .history-item {
+                grid-template-columns: 1fr;
+                gap: 10px;
             }
         }
     </style>
@@ -762,6 +816,39 @@
                     </div>
                 </div>
             </aside>
+        </section>
+
+        <section class="panel history-panel" id="riwayat-pesanan" aria-labelledby="history-title">
+            <div class="panel-header">
+                <h2 id="history-title">Riwayat Pesanan</h2>
+                <span>10 pesanan terbaru</span>
+            </div>
+
+            <div class="history-list">
+                @forelse ($pesanans as $pesanan)
+                    <article class="history-item">
+                        <div>
+                            <strong>{{ $pesanan->nama }}</strong>
+                            <span>Pelanggan</span>
+                        </div>
+                        <div>
+                            <strong>Pesanan</strong>
+                            <span>{{ $pesanan->pesanan }}</span>
+                        </div>
+                        <div class="history-note">
+                            <strong>Keterangan</strong>
+                            <span>{{ $pesanan->keterangan ?: 'Tidak ada keterangan' }}</span>
+                        </div>
+                        <time datetime="{{ $pesanan->created_at->toIso8601String() }}">
+                            {{ $pesanan->created_at->format('d/m/Y H:i') }}
+                        </time>
+                    </article>
+                @empty
+                    <div class="history-empty">
+                        Belum ada pesanan. Pesanan yang masuk akan ditampilkan di sini.
+                    </div>
+                @endforelse
+            </div>
         </section>
 
         <footer id="team">

@@ -1,17 +1,27 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Pesanan;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class PesananController extends Controller
 {
-    public function simpan(Request $request)
+    public function index(): View
+    {
+        $pesanans = Pesanan::query()->latest()->limit(10)->get();
+
+        return view('welcome', compact('pesanans'));
+    }
+
+    public function simpan(Request $request): RedirectResponse
     {
         // Validasi data yang masuk
         $request->validate([
             'nama' => 'required',
-            'pesanan' => 'required'
+            'pesanan' => 'required',
         ]);
 
         // Simpan ke database
